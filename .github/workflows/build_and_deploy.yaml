@@ -43,8 +43,8 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           TAG_NAME: ${{ steps.vars.outputs.tag }}
         run: |
-          envsubst '$DOCKERHUB_USERNAME,$TAG_NAME' < deploy/docker-compose.prod.yaml > deploy/docker_compose.yaml
-          rm -f deploy/docker-compose.prod.yaml
+          envsubst '$DOCKERHUB_USERNAME,$TAG_NAME' < ./todolist/deploy/docker-compose.prod.yaml > ./todolist/deploy/docker_compose.yaml
+          rm -f ./todolist/deploy/docker-compose.prod.yaml
       - name: Put on server
         uses: appleboy/scp-action@master
         with:
