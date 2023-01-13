@@ -55,10 +55,10 @@ jobs:
           target: "skypro_diploma"
           strip_components: 1
       - name: Decrypt env
-          uses: anthonykgross/ansible-vault-cli-github-action@v1
-          with:
-            vault_key: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
-            command: "ansible-vault decrypt deploy/.env"
+        uses: anthonykgross/ansible-vault-cli-github-action@v1
+        with:
+          vault_key: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+          command: "ansible-vault decrypt deploy/.env"
       - name: Compose
         uses: appleboy/ssh-action@master
         with:
