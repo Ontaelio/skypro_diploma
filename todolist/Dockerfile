@@ -14,6 +14,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["bash", "entrypoint.sh"]
+ENTRYPOINT ["bash", "entrypoint.sh"]
 
 CMD ["gunicorn", "todolist.wsgi", "-w", "4", "-b", "0.0.0.0:8000"]
