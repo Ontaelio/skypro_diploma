@@ -43,7 +43,7 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           TAG_NAME: ${{ steps.vars.outputs.tag }}
         run: |
-          envsubst '$DOCKERHUB_USERNAME,$TAG_NAME' < todolist/deploy/docker-compose.prod.yaml > todolist/deploy/docker_compose.yaml
+          envsubst '$DOCKERHUB_USERNAME,$TAG_NAME' < todolist/deploy/docker-compose.prod.yaml > todolist/deploy/docker-compose.yaml
           rm -f ./todolist/deploy/docker-compose.prod.yaml
       - name: Decrypt env
         uses: anthonykgross/ansible-vault-cli-github-action@v1
@@ -67,8 +67,6 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd skypro_diploma
-            ls
-            cd deploy
             ls
             docker-compose up -d
       - name: Clear up after deployment
