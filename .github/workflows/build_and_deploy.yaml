@@ -58,7 +58,7 @@ jobs:
         uses: anthonykgross/ansible-vault-cli-github-action@v1
         with:
           vault_key: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
-          command: "ansible-vault decrypt ./deploy/.env"
+          command: "ansible-vault decrypt deploy/test.txt"
       - name: Compose
         uses: appleboy/ssh-action@master
         with:
