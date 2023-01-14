@@ -49,7 +49,7 @@ jobs:
         uses: anthonykgross/ansible-vault-cli-github-action@v1
         with:
           vault_key: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
-          command: "ls todolist/" # ansible-vault decrypt deploy/test.txt"
+          command: "ansible-vault decrypt todolist/deploy/test.txt"
       - name: Put on server
         uses: appleboy/scp-action@master
         with:
