@@ -14,7 +14,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-# it seems that both api and collect_static are migrating anyway...
-# CMD ["bash", "entrypoint.sh"]
+CMD ["bash", "entrypoint.sh"]
 
 CMD ["gunicorn", "todolist.wsgi", "-w", "4", "-b", "0.0.0.0:8000"]
