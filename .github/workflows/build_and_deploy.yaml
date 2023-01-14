@@ -67,6 +67,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd skypro_diploma
+            ls
             docker-compose up -d
       - name: Clear up after deployment
         if: always()
