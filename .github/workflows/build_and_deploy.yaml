@@ -58,7 +58,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           source: "todolist/deploy/*"
           target: "skypro_diploma"
-          strip_components: 1
+          strip_components: 2
       - name: Compose
         uses: appleboy/ssh-action@master
         with:
