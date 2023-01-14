@@ -53,15 +53,15 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           source: "todolist/deploy/*"
           target: "skypro_diploma/"
-          strip_components: 1
-#      - name: Decrypt env
-#        uses: anthonykgross/ansible-vault-cli-github-action@v1
-#        with:
-#          host: ${{ secrets.SSH_HOST }}
-#          username: ${{ secrets.SSH_USER }}
-#          password: ${{ secrets.SSH_PASSWORD }}
-#          vault_key: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
-#          command: "ansible-vault decrypt /deploy/test.txt"
+          strip_components: 2
+      - name: Decrypt env
+        uses: anthonykgross/ansible-vault-cli-github-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          vault_key: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+          command: "ansible-vault decrypt /deploy/test.txt"
       - name: Compose
         uses: appleboy/ssh-action@master
         with:
