@@ -52,7 +52,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           source: "todolist/deploy/*"
-          target: "skypro_diploma"
+          target: "skypro_diploma/"
           strip_components: 1
 #      - name: Decrypt env
 #        uses: anthonykgross/ansible-vault-cli-github-action@v1
