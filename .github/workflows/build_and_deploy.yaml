@@ -66,7 +66,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            cd skypro_diploma/todolist/
+            cd skypro_diploma
+            ls
+            cd deploy
             ls
             docker-compose up -d
       - name: Clear up after deployment
