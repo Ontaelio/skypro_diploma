@@ -1,8 +1,10 @@
-from django.contrib.auth import login
-from rest_framework import generics, status
+from django.contrib.auth import login, logout
+from rest_framework import generics, status, permissions
 
-from core.serializers import CreateUserSerializer, LoginSerializer
+from core.serializers import CreateUserSerializer, LoginSerializer, ProfileSerializer
 from rest_framework.response import Response
+
+from core.models import User
 
 
 class SignUpView(generics.CreateAPIView):
@@ -20,4 +22,19 @@ class LoginView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         login(request=self.request, user=serializer.save())
+
+
+class ProfileView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
+
+    def destroy(self, request, *args, **kwargs):
+        logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 
