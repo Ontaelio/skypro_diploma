@@ -1,7 +1,7 @@
 from django.contrib.auth import login, logout
 from rest_framework import generics, status, permissions
 
-from core.serializers import CreateUserSerializer, LoginSerializer, ProfileSerializer
+from core.serializers import CreateUserSerializer, LoginSerializer, ProfileSerializer, UpdatePasswordSerializer
 from rest_framework.response import Response
 
 from core.models import User
@@ -35,6 +35,15 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UpdatePasswordView(generics.UpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UpdatePasswordSerializer
+
+    def get_object(self):
+        return self.request.user
+
 
 
 
