@@ -133,3 +133,5 @@ SOCIAL_AUTH_USER_MODEL = 'core.User'
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # CORS_ALLOW_ALL_ORIGINS = True
+
+# here be a small test
