@@ -1,6 +1,7 @@
+from django.db.models import Q
 from rest_framework import serializers, exceptions
 
-from goals.models import GoalCategory, Goal
+from goals.models import GoalCategory, Goal, GoalComment
 
 from core.serializers import ProfileSerializer
 
@@ -45,5 +46,32 @@ class GoalSerializer(serializers.ModelSerializer):
         model = Goal
         fields = '__all__'
         read_only_fields = ("id", "created", "updated", "user")
+
+
+class GoalCommentCreateSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    goal = serializers.PrimaryKeyRelatedField(
+        queryset=Goal.objects.filter(~Q(status=Goal.Status.archived))
+    )
+
+    class Meta:
+        model = GoalComment
+        fields = '__all__'
+        read_only_fields = ("id", "goal", "user")
+
+    def validate_goal(self, value):
+        if self.context['request'].user != value.user:
+            raise exceptions.PermissionDenied
+        return value
+
+
+class GoalCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GoalComment
+        fields = '__all__'
+        read_only_fields = ("id", "goal", "user")
+
+
+
 
 
