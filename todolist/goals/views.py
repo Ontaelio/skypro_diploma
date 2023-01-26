@@ -6,9 +6,9 @@ from rest_framework import generics, permissions, filters
 from goals.models import GoalCategory, Goal, GoalComment
 from goals.serializers import GoalCategoryCreateSerializer, GoalCategorySerializer, GoalCreateSerializer, \
     GoalSerializer, GoalCommentCreateSerializer, GoalCommentSerializer
-from rest_framework.pagination import LimitOffsetPagination
 
 from goals.filters import GoalDateFilter
+from rest_framework.pagination import LimitOffsetPagination
 
 
 class GoalCategoryCreateView(generics.CreateAPIView):
@@ -55,7 +55,7 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class GoalCreateView(generics.CreateAPIView):
-    # model = Goal
+    model = Goal
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = GoalCreateSerializer
 
@@ -92,7 +92,7 @@ class GoalView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class GoalCommentCreateView(generics.CreateAPIView):
-    # model = GoalComment
+    model = GoalComment
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = GoalCommentCreateSerializer
 
@@ -102,15 +102,16 @@ class GoalCommentListView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = GoalCommentSerializer
     filter_backends = [
+        DjangoFilterBackend,
         filters.OrderingFilter,
-        filters.SearchFilter,
     ]
-    ordering_fields = ["goal", "updated"]
-    ordering = ["goal", "updated"]
-    search_fields = ["goal", "text"]
+    ordering_fields = ["updated"]
+    ordering = ["-updated"]
 
     def get_queryset(self):
-        return GoalComment.objects.filter(Q(user_id=self.request.user.id))
+        if goal := self.request.query_params.get('goal'):
+            return GoalComment.objects.filter(goal__id=goal)
+        return GoalComment.objects.filter(user_id=self.request.user.id)
 
 
 class GoalCommentView(generics.RetrieveUpdateDestroyAPIView):
@@ -119,5 +120,5 @@ class GoalCommentView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GoalCommentSerializer
 
     def get_queryset(self):
-        return GoalComment.objects.filter(Q(user_id=self.request.user.id))
+        return GoalComment.objects.filter(user_id=self.request.user.id)
 

@@ -42,6 +42,8 @@ class GoalCreateSerializer(serializers.ModelSerializer):
 
 
 class GoalSerializer(serializers.ModelSerializer):
+    user = ProfileSerializer(read_only=True)
+
     class Meta:
         model = Goal
         fields = '__all__'
@@ -66,12 +68,9 @@ class GoalCommentCreateSerializer(serializers.ModelSerializer):
 
 
 class GoalCommentSerializer(serializers.ModelSerializer):
+    user = ProfileSerializer(read_only=True)
+
     class Meta:
         model = GoalComment
         fields = '__all__'
         read_only_fields = ("id", "goal", "user")
-
-
-
-
-
