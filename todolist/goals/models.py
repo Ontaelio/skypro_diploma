@@ -1,14 +1,8 @@
 from django.db import models
 
+from todolist.commons import ModelWithDates
 from core.models import User
-
-
-class ModelWithDates(models.Model):
-    class Meta:
-        abstract = True
-
-    created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    updated = models.DateTimeField(auto_now=True, verbose_name='Дата последнего обновления')
+from boards.models import Board
 
 
 class GoalCategory(ModelWithDates):
@@ -16,6 +10,7 @@ class GoalCategory(ModelWithDates):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+    board = models.ForeignKey(Board, verbose_name="Доска", on_delete=models.PROTECT, related_name="categories")
     title = models.CharField(max_length=255, verbose_name='Название')
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор')
     is_deleted = models.BooleanField(default=False, verbose_name='Удалена')
