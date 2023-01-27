@@ -24,8 +24,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'corsheaders',
     'rest_framework',
+    'django_filters',
     'social_django',
     'core',
+    'goals',
 ]
 
 MIDDLEWARE = [
@@ -134,4 +136,8 @@ SOCIAL_AUTH_USER_MODEL = 'core.User'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # CORS_ALLOW_ALL_ORIGINS = True
 
-# here be a small test 2
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
+}
+
+
