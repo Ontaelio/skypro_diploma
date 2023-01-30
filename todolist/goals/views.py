@@ -79,9 +79,14 @@ class GoalListView(generics.ListAPIView):
     search_fields = ["title", "description"]
 
     def get_queryset(self):
-        return Goal.objects.filter(
-            # HERE LIES AN ERROR!
-            Q(user_id=self.request.user.id) & ~Q(status=Goal.Status.archived) & Q(category__is_deleted=False)
+        return Goal.objects.prefetch_related('category__board__participants').filter(
+            # HERE WAS AN ERROR!
+            # category__board__participants__user_id=self.request.user.id,
+            # category__is_deleted=False).exclude(status=Goal.Status.archived)
+
+            Q(category__board__participants__user_id=self.request.user.id) &
+            ~Q(status=Goal.Status.archived) &
+            Q(category__is_deleted=False)
         )
 
 
