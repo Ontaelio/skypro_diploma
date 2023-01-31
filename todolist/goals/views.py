@@ -22,13 +22,13 @@ class GoalCategoryListView(generics.ListAPIView):
     model = GoalCategory
     permission_classes = (GoalCategoryPermissions,)
     serializer_class = GoalCategorySerializer
-    # pagination_class = LimitOffsetPagination
     filter_backends = [
+        DjangoFilterBackend,
         filters.OrderingFilter,
         filters.SearchFilter,
     ]
     filterset_fields = ['board']
-    ordering_fields = ["title", "created"]
+    ordering_fields = ["title"]
     ordering = ["title"]
     search_fields = ["title"]
 
@@ -96,8 +96,9 @@ class GoalView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GoalSerializer
 
     def get_queryset(self):
-        return Goal.objects.filter(
-            Q(user_id=self.request.user.id) & Q(category__is_deleted=False)
+        return Goal.objects.prefetch_related('category__board__participants').filter(
+            Q(category__board__participants__user_id=self.request.user.id) &
+            Q(category__is_deleted=False)
         )
 
 

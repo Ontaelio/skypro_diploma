@@ -49,8 +49,6 @@ class GoalCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created", "updated", "user")
 
     def validate_category(self, value):
-        # if self.context['request'].user != value.user:
-        #     raise exceptions.PermissionDenied
 
         if not BoardParticipant.objects.filter(
                 board_id=value.board_id,
@@ -82,8 +80,6 @@ class GoalCommentCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "goal", "user")
 
     def validate_goal(self, value):
-        if self.context['request'].user != value.user:
-            raise exceptions.PermissionDenied
 
         if not BoardParticipant.objects.filter(
                 board=value.category.board_id,
@@ -92,11 +88,6 @@ class GoalCommentCreateSerializer(serializers.ModelSerializer):
         ):
             raise exceptions.PermissionDenied
         return value
-
-    # def validate_goal(self, value):
-    #     if self.context['request'].user != value.user:
-    #         raise exceptions.PermissionDenied
-    #     return value
 
 
 class GoalCommentSerializer(serializers.ModelSerializer):

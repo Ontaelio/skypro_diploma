@@ -7,3 +7,4 @@
 * VK authorization is present, but doesn't work, as I don't have an account there.
 Github authorization is working, but not present on the front. Check /api/oauth/login/github manually.
 * Goals, categories and goal comments added
+* Boards added

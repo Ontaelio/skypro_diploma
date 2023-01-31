@@ -40,7 +40,8 @@ class BoardSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ("id", "created", "updated")
 
-    # Yes, I know this code is less efficient, but I wanted to write my own
+    # Yes, I know may look stranger than the provided one, but I wanted to write my own
+    # (and I do think it's more efficient, at least for PATCH)
     def update(self, instance, validated_data):
         new_participants = validated_data.pop("participants")
         old_participants = instance.participants.exclude(role=BoardParticipant.Role.owner)
@@ -55,7 +56,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
         old_ids = [item.user_id for item in old_participants]
 
-        # not sure atomic is needed here, as only the owner can update, but well
+        # not sure atomic is needed here, as only the owner can update, but if the PM wants it, let it be
         with transaction.atomic():
             for new_item in list(new_by_id.items()):
                 try:
@@ -73,7 +74,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
         return instance
 
-    # This is the correct code, as provided.
+    # This is the provided code.
     # Keeping it here for possible future use and reference
 
     # def updateX(self, instance, validated_data):
