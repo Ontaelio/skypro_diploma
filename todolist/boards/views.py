@@ -21,10 +21,7 @@ class BoardView(RetrieveUpdateDestroyAPIView):
     serializer_class = BoardSerializer
 
     def get_queryset(self):
-        return Board.objects.prefetch_related('participants').filter(
-            participants__user_id=self.request.user.id,
-            is_deleted=False
-        )
+        return Board.objects.filter(is_deleted=False)
 
     def perform_destroy(self, instance: Board):
         with transaction.atomic():
