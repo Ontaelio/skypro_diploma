@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -12,5 +12,6 @@ urlpatterns = [
     path("goal_comment/create", views.GoalCommentCreateView.as_view(), name='create-goal-comment'),
     path("goal_comment/list", views.GoalCommentListView.as_view(), name='goal-comment-list'),
     path("goal_comment/<pk>", views.GoalCommentView.as_view(), name='goal-comment-details'),
+    path("board/", include("boards.urls")),
 ]
 
