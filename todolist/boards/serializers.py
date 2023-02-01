@@ -58,15 +58,15 @@ class BoardSerializer(serializers.ModelSerializer):
 
         # not sure atomic is needed here, as only the owner can update, but if the PM wants it, let it be
         with transaction.atomic():
-            for new_item in list(new_by_id.items()):
+            for item_id, item_contents in new_by_id.items():
                 try:
                     with transaction.atomic():
                         BoardParticipant.objects.create(
-                            board=instance, user=new_item[1]["user"], role=new_item[1]["role"]
+                            board=instance, user=item_contents["user"], role=item_contents["role"]
                         )
                 except IntegrityError:
-                    old_participants[old_ids.index(new_item[0])].role = new_item[1]["role"]
-                    old_participants[old_ids.index(new_item[0])].save()
+                    old_participants[old_ids.index(item_id)].role = item_contents["role"]
+                    old_participants[old_ids.index(item_id)].save()
 
             if title := validated_data.get("title"):
                 instance.title = title
