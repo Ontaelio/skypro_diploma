@@ -43,9 +43,11 @@ class BoardSerializer(serializers.ModelSerializer):
     # Yes, I know may look stranger than the provided one, but I wanted to write my own
     # (and I do think it's more efficient, at least for PATCH)
     def update(self, instance, validated_data):
-        new_participants = validated_data.pop("participants")
+        # changes to make patch work as intended
+        new_participants = validated_data.get("participants") # if "participants" in validated_data else []
+        new_by_id = {item['user'].id: item for item in new_participants} if new_participants else {}
         old_participants = instance.participants.exclude(role=BoardParticipant.Role.owner)
-        new_by_id = {item['user'].id: item for item in new_participants}
+
 
         # the front uses only PUT, but I want PATCH to work as well
         if not self.partial:
