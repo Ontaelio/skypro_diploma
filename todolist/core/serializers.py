@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 
 from core.fields import PasswordField
-from core.models import User
+from core.models import User, TgUser
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -69,4 +69,22 @@ class UpdatePasswordSerializer(serializers.Serializer):
         raise NotImplementedError
 
 
+class TgUserConnectSerializer(serializers.ModelSerializer):
+    # user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = TgUser
+        fields = '__all__'
+        read_only_fields = ('id', 'user')
+
+
+class TgUserSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = TgUser
+        fields = '__all__'
+        read_only_fields = ('id',) # 'user')
+
+    # def update(self, instance, validated_data):
 
