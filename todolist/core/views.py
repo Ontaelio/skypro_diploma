@@ -56,12 +56,9 @@ class TgUserVerifyView(generics.UpdateAPIView):
     queryset = TgUser.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = TgUserSerializer
-    lookup_field = 'verification_code'
 
     def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = get_object_or_404(queryset, verification_code=self.request.data.get('verification_code'))
-        self.check_object_permissions(self.request, obj)
+        obj = get_object_or_404(self.queryset, verification_code=self.request.data.get('verification_code'))
         return obj
 
 
@@ -70,8 +67,3 @@ class TgUserDeleteView(generics.DestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = TgUserDeleteSerializer
     lookup_field = 'tg_user'
-
-    # def destroy(self, request, *args, **kwargs):
-    #     instance = get_object_or_404(self.queryset, tg_user=self.request.data.get('tg_user'))
-    #     self.perform_destroy(instance)
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
