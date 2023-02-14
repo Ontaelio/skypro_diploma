@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('bot/connect', core.views.TgUserConnectView.as_view(), name='Create TG user'),
     path('bot/verify', core.views.TgUserVerifyView.as_view(), name='Verify TG user'),
+    path('bot/delete/<int:tg_user>', core.views.TgUserDeleteView.as_view(), name='Logout and delete binding'),
 
     path('oauth/', include('social_django.urls', namespace='social')),
 ]

@@ -11,9 +11,12 @@ class TgUser(models.Model):
         verbose_name = 'TG юзер'
         verbose_name_plural = 'TG юзеры'
 
-    tg_user = models.IntegerField(unique=True, verbose_name="Пользователь TG")
+    tg_user = models.PositiveBigIntegerField(unique=True, verbose_name="Пользователь TG")
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, verbose_name="Пользователь")
     verification_code = models.CharField(max_length=10, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.tg_user)
 
 
 

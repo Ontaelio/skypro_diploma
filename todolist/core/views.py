@@ -1,13 +1,12 @@
 from django.contrib.auth import login, logout
 from rest_framework import generics, status, permissions
-
-from core.serializers import CreateUserSerializer, LoginSerializer, ProfileSerializer, UpdatePasswordSerializer, \
-    TgUserSerializer, TgUserConnectSerializer
 from rest_framework.generics import get_object_or_404
-
 from rest_framework.response import Response
 
 from core.models import User, TgUser
+
+from core.serializers import CreateUserSerializer, LoginSerializer, ProfileSerializer, UpdatePasswordSerializer, \
+    TgUserSerializer, TgUserConnectSerializer, TgUserDeleteSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -30,6 +29,7 @@ class LoginView(generics.CreateAPIView):
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = ProfileSerializer
+    # authentication_classes = [TgUserAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
@@ -60,9 +60,18 @@ class TgUserVerifyView(generics.UpdateAPIView):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        # make sure to catch 404's below
-        # obj = get_object_or_404(queryset, verification_code=self.request.data.get('verification_code'))
         obj = get_object_or_404(queryset, verification_code=self.request.data.get('verification_code'))
-        # obj = queryset.get(verification_code=self.request.verification_code)
         self.check_object_permissions(self.request, obj)
         return obj
+
+
+class TgUserDeleteView(generics.DestroyAPIView):
+    queryset = TgUser.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = TgUserDeleteSerializer
+    lookup_field = 'tg_user'
+
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = get_object_or_404(self.queryset, tg_user=self.request.data.get('tg_user'))
+    #     self.perform_destroy(instance)
+    #     return Response(status=status.HTTP_204_NO_CONTENT)

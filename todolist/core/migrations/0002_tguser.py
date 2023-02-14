@@ -16,8 +16,8 @@ class Migration(migrations.Migration):
             name='TgUser',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('tg_user', models.IntegerField(unique=True, verbose_name='Пользователь TG')),
-                ('verification_code', models.CharField(blank=True, max_length=10, null=True)),
+                ('tg_user', models.PositiveBigIntegerField(unique=True, verbose_name='Пользователь TG')),
+                ('verification_code', models.CharField(unique=True, blank=True, max_length=10, null=True)),
                 ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь')),
             ],
             options={

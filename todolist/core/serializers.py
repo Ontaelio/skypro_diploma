@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError, AuthenticationFailed
 
 from core.fields import PasswordField
 from core.models import User, TgUser
+from rest_framework.relations import HyperlinkedRelatedField
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -78,13 +79,30 @@ class TgUserConnectSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'user')
 
 
+class TgUserRelatedField(HyperlinkedRelatedField):
+    lookup_field = 'tg_user'
+
+
+class TgUserDeleteSerializer(serializers.HyperlinkedModelSerializer):
+    serializer_related_field = TgUserRelatedField
+
+    class Meta:
+        model = TgUser
+        fields = '__all__'
+
+
 class TgUserSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    # user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    # user = self.context['request'].user
 
     class Meta:
         model = TgUser
         fields = '__all__'
         read_only_fields = ('id',) # 'user')
 
-    # def update(self, instance, validated_data):
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        instance.user = user
+        instance.save()
+        return instance
 
