@@ -1,10 +1,12 @@
 from django.contrib.auth import login, logout
 from rest_framework import generics, status, permissions
-
-from core.serializers import CreateUserSerializer, LoginSerializer, ProfileSerializer, UpdatePasswordSerializer
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from core.models import User
+from core.models import User, TgUser
+
+from core.serializers import CreateUserSerializer, LoginSerializer, ProfileSerializer, UpdatePasswordSerializer, \
+    TgUserSerializer, TgUserConnectSerializer, TgUserDeleteSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -45,5 +47,28 @@ class UpdatePasswordView(generics.UpdateAPIView):
         return self.request.user
 
 
+class TgUserConnectView(generics.CreateAPIView):
+    serializer_class = TgUserConnectSerializer
 
 
+class TgUserVerifyView(generics.UpdateAPIView):
+    """
+    Here we check that the verification_code provided is in the TgUser table and bind it to the user
+    """
+    queryset = TgUser.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = TgUserSerializer
+
+    def get_object(self):
+        obj = get_object_or_404(self.queryset, verification_code=self.request.data.get('verification_code'))
+        return obj
+
+
+class TgUserDeleteView(generics.DestroyAPIView):
+    """
+    When a TG user uses /unbind command we delete them from the table.
+    """
+    queryset = TgUser.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = TgUserDeleteSerializer
+    lookup_field = 'tg_user'

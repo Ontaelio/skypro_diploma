@@ -39,7 +39,7 @@ class Goal(ModelWithDates):
     title = models.CharField(max_length=255, verbose_name='Название')
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор')
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
-    category = models.ForeignKey(GoalCategory, on_delete=models.RESTRICT, related_name='Goals', verbose_name='Категория')
+    category = models.ForeignKey(GoalCategory, on_delete=models.RESTRICT, related_name='goals', verbose_name='Категория')
     status = models.SmallIntegerField(choices=Status.choices, default=Status.to_do, verbose_name='Статус')
     priority = models.SmallIntegerField(choices=Priority.choices, default=Priority.medium, verbose_name='Приоритет')
     due_date = models.DateField(null=True, blank=True, verbose_name='Дата дедлайна')

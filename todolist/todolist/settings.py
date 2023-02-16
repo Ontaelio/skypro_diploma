@@ -123,7 +123,9 @@ SOCIAL_AUTH_GITHUB_SECRET = env.str('GITHUB_SECRET')
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',
     'social_core.backends.github.GithubOAuth2',
+    'core.authentications.TgUserAuthentication',
     'django.contrib.auth.backends.ModelBackend',
+
 )
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
@@ -138,7 +140,12 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+            'core.authentications.TgUserAuthentication',
+            'rest_framework.authentication.BasicAuthentication',
+            'rest_framework.authentication.SessionAuthentication',
+        ]
 }
 
 

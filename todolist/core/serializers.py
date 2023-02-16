@@ -4,10 +4,14 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 
 from core.fields import PasswordField
-from core.models import User
+from core.models import User, TgUser
+from rest_framework.relations import HyperlinkedRelatedField
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
+    """
+    Create user, make them type password twice.
+    """
     password = PasswordField(required=True)
     password_repeat = PasswordField(required=True)
 
@@ -45,7 +49,6 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email')
@@ -69,4 +72,42 @@ class UpdatePasswordSerializer(serializers.Serializer):
         raise NotImplementedError
 
 
+class TgUserConnectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TgUser
+        fields = '__all__'
+        read_only_fields = ('id', 'user')
 
+
+class TgUserRelatedField(HyperlinkedRelatedField):
+    """
+    needed to make delete possible with tg_user in request params.
+    """
+    lookup_field = 'tg_user'
+
+
+class TgUserDeleteSerializer(serializers.HyperlinkedModelSerializer):
+    serializer_related_field = TgUserRelatedField
+
+    class Meta:
+        model = TgUser
+        fields = '__all__'
+
+
+class TgUserSerializer(serializers.ModelSerializer):
+    """
+    This is a PATCH, thus it does not work with HiddenField for some reason (commented out below).
+    Have to use self.context.user
+    """
+    # user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = TgUser
+        fields = '__all__'
+        read_only_fields = ('id',)  # 'user')
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        instance.user = user
+        instance.save()
+        return instance

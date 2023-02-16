@@ -31,3 +31,6 @@ class BoardParticipant(ModelWithDates):
     board = models.ForeignKey(Board, on_delete=models.PROTECT, related_name="participants", verbose_name="Доска")
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="participants", verbose_name="Пользователь")
     role = models.PositiveSmallIntegerField(choices=Role.choices, default=Role.owner, verbose_name="Роль")
+
+    def __str__(self):
+        return f'{self.user} on {self.board}'
