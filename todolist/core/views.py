@@ -29,7 +29,6 @@ class LoginView(generics.CreateAPIView):
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = ProfileSerializer
-    # authentication_classes = [TgUserAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
@@ -53,6 +52,9 @@ class TgUserConnectView(generics.CreateAPIView):
 
 
 class TgUserVerifyView(generics.UpdateAPIView):
+    """
+    Here we check that the verification_code provided is in the TgUser table and bind it to the user
+    """
     queryset = TgUser.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = TgUserSerializer
@@ -63,6 +65,9 @@ class TgUserVerifyView(generics.UpdateAPIView):
 
 
 class TgUserDeleteView(generics.DestroyAPIView):
+    """
+    When a TG user uses /unbind command we delete them from the table.
+    """
     queryset = TgUser.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = TgUserDeleteSerializer

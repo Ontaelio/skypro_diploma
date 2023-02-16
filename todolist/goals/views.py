@@ -9,7 +9,6 @@ from goals.serializers import GoalCategoryCreateSerializer, GoalCategorySerializ
 from goals.permissions import GoalCategoryPermissions, GoalPermissions, IsOwnerOrReadOnly
 
 from goals.filters import GoalDateFilter
-from rest_framework.pagination import LimitOffsetPagination
 
 
 class GoalCategoryCreateView(generics.CreateAPIView):
@@ -51,6 +50,11 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
         )
 
     def perform_destroy(self, instance):
+        """
+        We do not delete, we keep it for some reason as 'is_deleted' record (as requested).
+        TODO: change this approach if intend to use this as a working app.
+        """
+
         with transaction.atomic():
             instance.is_deleted = True
             instance.save(update_fields=('is_deleted',))
@@ -80,10 +84,6 @@ class GoalListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Goal.objects.prefetch_related('category__board__participants').filter(
-            # HERE WAS AN ERROR!
-            # category__board__participants__user_id=self.request.user.id,
-            # category__is_deleted=False).exclude(status=Goal.Status.archived)
-
             Q(category__board__participants__user_id=self.request.user.id) &
             ~Q(status=Goal.Status.archived) &
             Q(category__is_deleted=False)
@@ -109,6 +109,9 @@ class GoalCommentCreateView(generics.CreateAPIView):
 
 
 class GoalCommentListView(generics.ListAPIView):
+    """
+    Order by updated field, the latest first.
+    """
     model = GoalComment
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = GoalCommentSerializer

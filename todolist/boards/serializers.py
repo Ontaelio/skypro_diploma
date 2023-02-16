@@ -7,6 +7,9 @@ from core.models import User
 
 
 class BoardCreateSerializer(serializers.ModelSerializer):
+    """
+    Create a board, save the owner (creator) in the M2M DB Participants
+    """
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -22,6 +25,10 @@ class BoardCreateSerializer(serializers.ModelSerializer):
 
 
 class BoardParticipantSerializer(serializers.ModelSerializer):
+    """
+    Check the board participant.
+    Just for the record: all this stuff was done according to the task, I'm not to be blamed for the architecture.
+    """
     role = serializers.ChoiceField(required=True, choices=BoardParticipant.Role.choices[1:])
     user = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
 
@@ -32,6 +39,11 @@ class BoardParticipantSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    """
+    Edit board info.
+    This serializer is THE prime example of the weirdness. But it does the work, especially with PATCH.
+    Comments and the recommended approach (commented out) below.
+    """
     participants = BoardParticipantSerializer(many=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -44,10 +56,9 @@ class BoardSerializer(serializers.ModelSerializer):
     # (and I do think it's more efficient, at least for PATCH)
     def update(self, instance, validated_data):
         # changes to make patch work as intended
-        new_participants = validated_data.get("participants") # if "participants" in validated_data else []
+        new_participants = validated_data.get("participants")
         new_by_id = {item['user'].id: item for item in new_participants} if new_participants else {}
         old_participants = instance.participants.exclude(role=BoardParticipant.Role.owner)
-
 
         # the front uses only PUT, but I want PATCH to work as well
         if not self.partial:
@@ -112,6 +123,10 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class BoardListSerializer(serializers.ModelSerializer):
+    """
+    The name says it all
+    """
+
     class Meta:
         model = Board
         fields = "__all__"

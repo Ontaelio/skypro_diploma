@@ -4,6 +4,9 @@ from boards.models import BoardParticipant, Board
 
 
 class BoardPermissions(permissions.IsAuthenticated):
+    """
+    Only owner can modify objects, the rest can view them
+    """
     def has_object_permission(self, request, view, obj):
 
         _filters: dict = {'user': request.user, 'board': obj}

@@ -24,6 +24,9 @@ class BoardView(RetrieveUpdateDestroyAPIView):
         return Board.objects.filter(is_deleted=False)
 
     def perform_destroy(self, instance: Board):
+        """
+        We don't delete a board, we mark it as deleted, according to the task.
+        """
         with transaction.atomic():
             instance.is_deleted = True
             instance.save(update_fields=('is_deleted',))
@@ -34,7 +37,6 @@ class BoardView(RetrieveUpdateDestroyAPIView):
         return instance
 
 
-# add permissions!
 class BoardListView(generics.ListAPIView):
     model = Board
     permission_classes = (permissions.IsAuthenticated,)
