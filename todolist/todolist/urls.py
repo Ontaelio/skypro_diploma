@@ -7,7 +7,7 @@ import core.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('core/', include('core.urls')),
+    path('core/', include(('core.urls', 'core'))),
     path("goals/", include("goals.urls")),
 
     path('bot/connect', core.views.TgUserConnectView.as_view(), name='Create TG user'),
