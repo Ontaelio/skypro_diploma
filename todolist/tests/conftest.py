@@ -1,6 +1,17 @@
-from pytest_factoryboy import register
+import pytest
+from rest_framework.test import APIClient
 
-from tests.factories import *
+# from tests.factories import *
 
-register(UserFactory)
+pytest_plugins = 'tests.factories'
 
+
+@pytest.fixture()
+def client() -> APIClient:
+    return APIClient()
+
+
+@pytest.fixture()
+def auth_client(client, user):
+    client.force_login(user)
+    return client
