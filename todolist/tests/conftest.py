@@ -3,7 +3,7 @@ from rest_framework.test import APIClient
 
 # from tests.factories import *
 
-pytest_plugins = 'tests.factories'
+pytest_plugins = ['tests.factories', 'tests.fixtures']
 
 
 @pytest.fixture()

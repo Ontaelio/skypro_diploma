@@ -9,7 +9,7 @@ from tests.utils import BaseTestCase
 class TestProfileRetrieve(BaseTestCase):
     url = reverse('core:profile')
 
-    def test_auth_get(self, client, faker):
+    def test_auth_get(self, client):
         response = client.get(self.url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -33,7 +33,7 @@ class TestProfileDestroy(BaseTestCase):
         response = client.delete(self.url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_logout(self, auth_client, user):
+    def test_logout(self, auth_client):
         response = auth_client.get(self.url)
         assert response.status_code == status.HTTP_200_OK
         response = auth_client.delete(self.url)

@@ -8,11 +8,11 @@ import core.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('core/', include(('core.urls', 'core'))),
-    path("goals/", include("goals.urls")),
+    path("goals/", include(("goals.urls", 'goals'))),
 
-    path('bot/connect', core.views.TgUserConnectView.as_view(), name='Create TG user'),
-    path('bot/verify', core.views.TgUserVerifyView.as_view(), name='Verify TG user'),
-    path('bot/delete/<int:tg_user>', core.views.TgUserDeleteView.as_view(), name='Logout and delete binding'),
+    path('bot/connect', core.views.TgUserConnectView.as_view(), name='create_tg_user'),
+    path('bot/verify', core.views.TgUserVerifyView.as_view(), name='verify_tg_user'),
+    path('bot/delete/<int:tg_user>', core.views.TgUserDeleteView.as_view(), name='delete_binding'),
 
     path('oauth/', include('social_django.urls', namespace='social')),
 ]
